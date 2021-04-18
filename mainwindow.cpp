@@ -1,17 +1,23 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "employe.h"
+#include "client.h"
+#include "preference.h"
+#include <QSqlQuery>
+#include "QTextDocument "
+#include <QtPrintSupport/QPrinter>
+#include <QtPrintSupport/QPrintDialog>
+#include <QTextStream>
+#include <QFile>
+#include <QDataStream>
 #include <QMessageBox>
-#include "smtp.h"
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+
+
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
 {
-ui->setupUi(this);
-
-  ui->tabetudiant->setModel(em.afficherEmploye());
-  ui->tabetudiant_2->setModel(ca.afficher());
-
+    ui->setupUi(this);
 }
 
 MainWindow::~MainWindow()
@@ -19,267 +25,417 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pb_ajouter_clicked()
+
+
+void MainWindow::on_pushButton_clicked()
 {
-    int id = ui->lineEdit_id->text().toInt();
-    QString nom= ui->lineEdit_nom->text();
-    QString prenom= ui->lineEdit_prenom->text();
+    ui->stackedWidget->setCurrentIndex(1);
+}
 
-    int telephone = ui->tel->text().toInt();
+void MainWindow::on_pushButton_11_clicked()
+{
+    ui->CRUD->setCurrentIndex(0);
+}
 
-    QString mail= ui->lineEdit_5->text();
-   QString sexe= ui->lineEdit_6->text();
-    employe E(id,nom,prenom,telephone,mail,sexe);
+void MainWindow::on_pushButton_12_clicked()
+{
+    ui->CRUD->setCurrentIndex(2);
+}
 
-  bool test=E.ajouterEmploye();
-  if(test)
+void MainWindow::on_pushButton_13_clicked()
+{
+    ui->CRUD->setCurrentIndex(3);
+    ui->tabclient->setModel(tmpclient.afficher());//refresh
+}
+
+void MainWindow::on_pushButton_21_clicked()
+{
+    QString nom=ui->lineEdit_nom->text();
+        QString prenom=ui->lineEdit_prenom->text();
+        QString mail=ui->lineEdit_email->text();
+        int num=ui->lineEdit_numerocompte->text().toInt();
+        QString date=ui->lineEdit_date->text();
+        QString adresse=ui->lineEdit_adresse->text();
+        Client c (nom,prenom,mail,num,date,adresse);
+
+        int erreur=0;
+        if(ui->lineEdit_nom->text().isEmpty())
+        {
+            ui->lineEdit_nom->setStyleSheet("border: 2px solid red;");
+            erreur=1;
+        }
+        else {ui->lineEdit_prenom->setStyleSheet("");}
+        if(ui->lineEdit_prenom->text().isEmpty())
+        {
+            ui->lineEdit_prenom->setStyleSheet("border: 2px solid red;");
+            erreur=1;
+        }
+        else {ui->lineEdit_email->setStyleSheet("");}
+        if(ui->lineEdit_email->text().isEmpty())
+        {
+            ui->lineEdit_email->setStyleSheet("border: 2px solid red;");
+            erreur=1;
+        }
+        else {ui->lineEdit_numerocompte->setStyleSheet("");}
+        if(ui->lineEdit_numerocompte->text().isEmpty())
+        {
+            ui->lineEdit_numerocompte->setStyleSheet("border: 2px solid red;");
+            erreur=1;
+        }
+        else {ui->lineEdit_date->setStyleSheet("");}
+        if(ui->lineEdit_date->text().isEmpty())
+        {
+            ui->lineEdit_date->setStyleSheet("border: 2px solid red;");
+            erreur=1;
+        }
+        else {ui->lineEdit_date ->setStyleSheet("");}
+        if(ui->lineEdit_adresse->text().isEmpty())
+        {
+            ui->lineEdit_adresse->setStyleSheet("border: 2px solid red;");
+            erreur=1;
+        }
+        else {ui->lineEdit_adresse->setStyleSheet("");}
+        if (erreur)
+        {
+            QMessageBox::warning(nullptr, QObject::tr("ERREUR d'ajout"),
+                              QObject::tr("Vérifiez vos champs.\n"
+                                          "Click Cancel to exit."), QMessageBox::Cancel);
+        }
+       else if(!erreur)
+        {
+            bool test=c.ajouter();
+
+
+   if((test) && (!erreur))
 {
 
-      ui->tabetudiant->setModel(em.afficherEmploye());//refresh
-
-             QMessageBox::information(nullptr, QObject::tr("Ajout effectué"),
-                  QObject::tr("Employé ajouté.\n"
+ui->tabclient->setModel(tmpclient.afficher());//refresh
+QMessageBox::information(nullptr, QObject::tr("Ajouter un client"),
+                  QObject::tr("Client ajouté.\n"
                               "Click Cancel to exit."), QMessageBox::Cancel);
 
 }
+}
   else
-      QMessageBox::critical(nullptr, QObject::tr("Ajout non effectyué"),
+      QMessageBox::critical(nullptr, QObject::tr("Ajouter un client"),
                   QObject::tr("Erreur !.\n"
                               "Click Cancel to exit."), QMessageBox::Cancel);
 
 
 }
 
-void MainWindow::on_pb_supprimer_clicked()
+
+
+
+void MainWindow::on_pushButton_14_clicked()
 {
-int id = ui->lineEdit_id_2->text().toInt();
-
-bool test=em.supprimerEmploye();
-if(test)
-{//ui->tabetudiant->setModel(tmpetudiant.afficher());//refresh
-    QMessageBox::information(nullptr, QObject::tr("Suppression effectué"),
-                QObject::tr("Etudiant supprimé.\n"
-                            "Click Cancel to exit."), QMessageBox::Cancel);
-
-}
-else
-    QMessageBox::critical(nullptr, QObject::tr("Suppression non effectué"),
-                QObject::tr("Erreur !.\n"
-                            "Click Cancel to exit."), QMessageBox::Cancel);
-
+    ui->CRUD->setCurrentIndex(1);
 
 }
 
-void MainWindow::on_pb_ajouter_2_clicked()
+void MainWindow::on_pushButton_26_clicked()
 {
-    int identifiant = ui->identifiant1->text().toInt();
-    QString nom= ui->lineEdit_nom_2->text();
-     QString poste= ui->lineEdit_prenom_2->text();
-     int salaire= ui->salaire->text().toInt();
+    ui->stackedWidget->setCurrentIndex(0);
 
-    categorie c(identifiant, nom, poste, salaire);
-    bool test=c.ajouter();
+}
+
+void MainWindow::on_pushButton_25_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+
+}
+
+void MainWindow::on_pushButton_20_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+
+}
+
+void MainWindow::on_pushButton_22_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+
+}
+
+void MainWindow::on_pushButton_19_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+
+}
+
+void MainWindow::on_pushButton_8_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+
+}
+
+void MainWindow::on_pushButton_30_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_pushButton_10_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::on_pushButton_9_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+    ui->CRUD_2->setCurrentIndex(1);
+
+}
+
+void MainWindow::on_pushButton_18_clicked()
+{
+  //  ui->CRUD_2->setCurrentIndex(1);
+    ui->CRUD_2->setCurrentIndex(2);
+    ui->tabpreference->setModel(tmppreference.afficher());//refresh
+}
+
+void MainWindow::on_pushButton_16_clicked()
+{
+    ui->CRUD_2->setCurrentIndex(4);
+
+}
+
+void MainWindow::on_pushButton_17_clicked()
+{
+   // ui->CRUD_2->setCurrentIndex(2);
+    //ui->tab_credit->setModel(tmpcredit.afficher());//refresh
+    ui->CRUD_2->setCurrentIndex(3);
+
+
+}
+
+void MainWindow::on_pushButton_15_clicked()
+{
+    ui->CRUD_2->setCurrentIndex(0);
+
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+    ui->CRUD_2->setCurrentIndex(1);
+
+}
+void MainWindow::on_pushButton_4_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+    ui->CRUD_2->setCurrentIndex(1);
+}
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    int reff = ui->lineEdit_2->text().toInt();
+    bool test=tmpclient.supprimer(reff);
     if(test)
-    {
-
-        ui->tabetudiant_2->setModel(ca.afficher());//refresh
-
-               QMessageBox::information(nullptr, QObject::tr("Ajout effectué"),
-                    QObject::tr("Categorie ajouté.\n"
+    {ui->tabclient->setModel(tmpclient.afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Supprimer un client"),
+                    QObject::tr("Client supprimé.\n"
                                 "Click Cancel to exit."), QMessageBox::Cancel);
 
-  }
+    }
     else
-    {
-        QMessageBox::critical(nullptr, QObject::tr("Ajout non effectué"),
+        QMessageBox::critical(nullptr, QObject::tr("Supprimer un client"),
                     QObject::tr("Erreur !.\n"
                                 "Click Cancel to exit."), QMessageBox::Cancel);
 
 
 
-    }
 }
 
-
-void MainWindow::on_pushButton_14_clicked()
+void MainWindow::on_pushButton_5_clicked()
 {
-    int id=ui->lineEdit->text().toInt();
-    ca.setID(id);
-    if(ca.verificationCategorie()==0)
-    {
-        ui->lineEdit->show();
-        ui->lineEdit_2->show();
-        ui->lineEdit_3->show();
-        ui->lineEdit_16->show();
+       QString nom=ui->lineEdit_montant_4->text();
+       int id=ui->lineEditnom_5->text().toFloat();
+       preference cr (id,nom);
+       bool test=cr.ajouter();
 
-        QString id=QString::number(ca.get_identifiant());
-        QString pr=QString::number(ca.get_salaire());
-
-        ui->lineEdit->setText(id);
-        ui->lineEdit_2->setText(ca.get_nom());;
-        ui->lineEdit_3->setText(ca.get_poste());
-        ui->lineEdit_16->setText(pr);
-
-    }
-    else
-    {
-        QMessageBox::critical(nullptr, QObject::tr("ok"),
-                              QObject::tr("l'identifiant n'existe pas \n"
-                                          "click cancel to exit."), QMessageBox::Cancel);
-    }
-}
-
-
-
-
-
-
-
-void MainWindow::on_pushButton_11_clicked()
+  if(test)
 {
-     int identifiant = ui->lineEdit->text().toInt();
-     ca.setID(identifiant);
-     QString nom= ui->lineEdit_2->text();
-     ca.setNom(nom);
-     QString poste= ui->lineEdit_3->text();
-     ca.setposte(poste);
-     int salaire= ui->lineEdit_16->text().toInt();
-     ca.setsalaire(salaire);
-     categorie c(ca.get_identifiant(), ca.get_nom(), ca.get_poste(), ca.get_salaire());
-     bool test=c.modifier();
-     if(test)
-     {
 
-         ui->tabetudiant_2->setModel(ca.afficher());//refresh
-
-                QMessageBox::information(nullptr, QObject::tr("effectué"),
-                     QObject::tr(" Modifié.\n"
-                                 "Click Cancel to exit."), QMessageBox::Cancel);
-
-   }
-     else
-     {
-         QMessageBox::critical(nullptr, QObject::tr("non effectyué"),
-                     QObject::tr("non modifié !.\n"
-                                 "Click Cancel to exit."), QMessageBox::Cancel);
-
-
-
-     }
-}
-
-
-
-
-
-
-
-void MainWindow::on_pb_supprimer_2_clicked()
-{
-   int ident= ui->lineEdit_id_4->text().toInt();
-    ca.setID(ident);
-
-        if(ca.verificationCategorie()==0)
-        {
-            bool test=ca.supprimer(ca.get_identifiant());
-            if(test)
-            {
-                ui->tabetudiant_2->setModel(ca.afficher());
-                qDebug()<<"Suppression effectue"<<endl;
-                QMessageBox::information(this, "Reussite", "Supression effectué !");
-                ui->lineEdit_id_4->clear();
-
-            }
-            else
-            {
-                qDebug()<<"Suppression non effectue"<<endl;
-                QMessageBox::warning(this, "Echec", "Supression non effectué !");
-                ui->lineEdit_id_4->clear();
-            }
-
-        }
-        else
-        {
-             QMessageBox::warning(this, "Echec", "identifiant non existant !");
-        }
-
+ui->tabpreference->setModel(tmppreference.afficher());//refresh
+QMessageBox::information(nullptr, QObject::tr("Ajouter une préference"),
+                  QObject::tr("préference ajoutée.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
 
 }
+  else
+      QMessageBox::critical(nullptr, QObject::tr("Ajouter une préference"),
+                  QObject::tr("Erreur !.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
 
-void MainWindow::on_pushButton_clicked()
-{
-    ui->tabetudiant_2->setModel(ca.trier_nom());
-}
 
-
-void MainWindow::on_pushButton_12_clicked()
-{
-
-        ui->tabetudiant_2->setModel(ca.trier_salaire());
-
-}
-
-void MainWindow::on_pushButton_13_clicked()
-{
-     ui->tabetudiant_2->setModel(ca.trier_ID());
-}
-
-void MainWindow::on_pushButton_15_clicked()
-{
-    QString nom= ui->nomcher->text();
-    ca.setNom(nom);
-    if(ca.verificationCategorieN()==0)
-    {
-      ui->tabcategorie->setModel(ca.chercher(ca.get_nom()));
-       ui->nomcher->clear();
-    }
-
-    else
-    {
-             QMessageBox::warning(this, "Echec", "non existant !");
-             ui->nomcher->clear();
-        }
-
-}
-
-void MainWindow::on_pushButton_16_clicked()
-{
-    int id= ui->lineEdit_18->text().toInt();
-    ca.setID(id);
-    if(ca.verificationCategorie()==0)
-    {
-    ui->tabcategorie->setModel(ca.chercherID(ca.get_identifiant()));
-    ui->lineEdit_18->clear();
-    }
-    else
-    {
-    QMessageBox::warning(this, "Echec", "non existant !");
-    ui->lineEdit_18->clear();
-    }
-}
-
-void MainWindow::on_pushButton_17_clicked()
-{
-    int salaire= ui->lineEdit_17->text().toInt();
-    ca.setsalaire(salaire);
-
-    if(ca.verificationCategorieS()==0)
-    {
-    ui->tabcategorie->setModel(ca.chercherSalaire(ca.get_salaire()));
-    ui->lineEdit_17->clear();
-    }
-    else
-     {
-
-        QMessageBox::warning(this, "Echec", "non existant !");
-        ui->lineEdit_17->clear(); //efface le qline edit
-    }
 }
 
 void MainWindow::on_pushButton_7_clicked()
 {
-    Smtp* smtp = new Smtp("douamerveille92@gmail.com","RC02072000","smtp.gmail.com",465);
-    connect (smtp, SIGNAL (status (QString)), this, SLOT (mailSent(QString)));
-    smtp->sendMail("douamerveille92@gmail.com", ui->lineEdit_4->text(), ui->sujet->text(), ui->plainTextEdit->toPlainText());
+    int id = ui->lineEdit_3->text().toInt();
+    bool test=tmppreference.supprimer(id);
+    if(test)
+    {ui->tabpreference->setModel(tmppreference.afficher());//refresh
+        QMessageBox::information(nullptr, QObject::tr("Supprimer une préference"),
+                    QObject::tr("préference supprimée.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
+
+    }
+    else
+        QMessageBox::critical(nullptr, QObject::tr("Supprimer une préference"),
+                    QObject::tr("Erreur !.\n"
+                                "Click Cancel to exit."), QMessageBox::Cancel);
 }
 
+void MainWindow::on_pushButton_23_clicked()
+{
+    QSqlQuery query;
+
+
+    QString nom=ui->lineEdit_nom5->text();
+        QString prenom=ui->lineEdit_prenom5->text();
+        QString mail=ui->lineEdit_mail5->text();
+        int num=ui->lineEdit_numerocompte5->text().toInt();
+        QString date=ui->lineEdit_date5->text();
+        QString adresse=ui->lineEdit_adresse5->text();
+        QString res= QString::number(num);
+
+            query.prepare("update CLIENT set Nom=:nom ,PRENOM=:prenom ,MAIL=:mail , NUM=:num, DATEE=:date ,ADRESSE=:adresse WHERE NUM =:num");
+            query.bindValue(":nom",nom);
+            query.bindValue(":prenom",prenom);
+            query.bindValue(":mail",mail);
+            query.bindValue(":num",res);
+            query.bindValue(":date",date);
+            query.bindValue(":adresse",adresse);
+
+            bool t=query.exec();
+                   if(t)
+                   {
+                       ui->tabclient->setModel(tmpclient.afficher());//refresh
+                   QMessageBox::information(nullptr, QObject::tr("Modifier"),
+                                   QObject::tr("Promotion modifié.\n"
+                                               "Click Cancel to exit."), QMessageBox::Cancel);
+
+                   }
+                   else
+                      { QMessageBox::critical(nullptr, QObject::tr("Modifier"),
+                                   QObject::tr("Erreur !.\n"
+                                               "Click Cancel to exit."), QMessageBox::Cancel);
+}
+}
+
+void MainWindow::on_pushButton_28_clicked()
+{
+    QSqlQuery query;
+    QString nom=ui->lineEditnom_3->text();
+    int id=ui->lineEditid_2->text().toInt();
+
+    preference cr (id,nom);
+
+            query.prepare("update preference set NOM=:nom WHERE ID =:id");
+            query.bindValue(":id",id);
+            query.bindValue(":nom",nom);
+
+
+            bool t=query.exec();
+                   if(t)
+                   {
+                       ui->tabpreference->setModel(tmppreference.afficher());//refresh
+                   QMessageBox::information(nullptr, QObject::tr("Modifier"),
+                                   QObject::tr("Credit modifié.\n"
+                                               "Click Cancel to exit."), QMessageBox::Cancel);
+
+                   }
+                   else
+                      { QMessageBox::critical(nullptr, QObject::tr("Modifier"),
+                                   QObject::tr("Erreur !.\n"
+                                               "Click Cancel to exit."), QMessageBox::Cancel);
+}
+}
+
+
+
+
+
+
+
+
+void MainWindow::on_imprimer_clicked()
+{
+    /* QPrinter printer;
+                      QString doc;
+
+                      printer.setPrinterName("printer1");
+                      QPrintDialog print_dialog(&printer,this);
+                     if(print_dialog.exec()== QDialog::Rejected) return ;
+
+                       ui->text_id-> */
+
+
+                QString strStream;
+                QTextStream out(&strStream);
+
+                const int rowCount = ui->tabclient->model()->rowCount();
+                const int columnCount = ui->tabclient->model()->columnCount();
+
+                out <<  "<html>\n"
+                        "<head>\n"
+                        "<meta Content=\"Text/html; charset=Windows-1251\">\n"
+                     <<  QString("<title>%1</title>\n").arg("col1")
+                      <<  "</head>\n"
+                          "  <h1>Gestion des clients PDF</h1>"
+                          "<body bgcolor=#7ebbbd  link=#5000A0>\n"
+                          "<table border=1 cellspacing=0 cellpadding=2 >\n";
+
+                // headers
+                out << "<thead><tr >";
+                for (int column = 0; column < columnCount; column++)
+                    if (!ui->tabclient->isColumnHidden(column))
+                        out << QString("<th>%1</th>").arg(ui->tabclient->model()->headerData(column, Qt::Horizontal).toString());
+                out << "</tr></thead>\n";
+
+                // data table
+                for (int row = 0; row < rowCount; row++) {
+                    out << "<tr>";
+                    for (int column = 0; column < columnCount; column++) {
+                        if (!ui->tabclient->isColumnHidden(column)) {
+                            QString data = ui->tabclient->model()->data(ui->tabclient->model()->index(row, column)).toString().simplified();
+                            out << QString("<td bkcolor=0>%1</td>").arg((!data.isEmpty()) ? data : QString("&nbsp;"));
+                        }
+                    }
+                    out << "</tr>\n";
+                }
+                out <<  "</table>\n"
+                        "</body>\n"
+                        "</html>\n";
+
+                QTextDocument *document = new QTextDocument();
+                document->setHtml(strStream);
+
+                QPrinter printer;
+
+                QPrintDialog *dialog = new QPrintDialog(&printer, NULL);
+                if (dialog->exec() == QDialog::Accepted) {
+                    document->print(&printer);
+                }
+
+                delete document;
+    }
+
+
+void MainWindow::on_comboBox_2_currentTextChanged(const QString &arg1)
+{
+    if(arg1=="Cin")
+        {
+            ui->tabclient->setModel(tmpclient.trierid());
+        }
+        else if(arg1=="Nom")
+        {
+            ui->tabclient->setModel(tmpclient.triernom());
+        }
+}
+
+void MainWindow::on_lineEdit_4_textChanged(const QString &arg1)
+{
+      ui->tabclient->setModel(tmpclient.rechercher(arg1));
+}
