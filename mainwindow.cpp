@@ -1,157 +1,370 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "prime.h"
-#include "salaire.h"
+#include "domaine.h"
+#include "offre.h"
+#include <QSqlQuery>
 #include <QMessageBox>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-    QPixmap pix("C:/Users/HP/Desktop/boris/Atelier_Connexion/markus-spiske-1yyKF6NK4PQ-unsplash.jpg");
-        ui->label_10->setPixmap(pix.scaled(1100,15000,Qt::KeepAspectRatio));
-        QPixmap pix2("C:/Users/HP/Desktop/boris/Atelier_Connexion/press.jpg");
-            ui->label_14->setPixmap(pix2.scaled(1100,15000,Qt::KeepAspectRatio));
-ui->lineEdit_14->setValidator(new QIntValidator(1000, 9999, this));
-}
+
+
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+   ui(new Ui::MainWindow)
+
+ {
+
+     ui->setupUi(this);
+ }
+
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
-void MainWindow::on_pushButton_2_clicked()
-{
-    Prime P1; P1.setnump(ui->lineEdit->text().toInt());
-    bool test=P1.supprimer(P1.getnump());
-    QMessageBox msgBox;
-
-    if(test)
-       { msgBox.setText("Suppression avec succes.");
-    ui->tableView->setModel(P.afficher());
-
-    }
-    else
-        msgBox.setText("Echec de suppression");
-            msgBox.exec();
-}
 
 
 void MainWindow::on_pushButton_clicked()
 {
-
-    int nump=ui->lineEdit_14->text().toInt();
-    int valeur=ui->la_description->text().toInt();
-    QString nom=ui->le_id->text();
- Prime P(nom,nump,valeur);
- bool test=P.ajouter();
- QMessageBox msgBox;
-
- if(test)
-   {  msgBox.setText("Ajout avec succes.");
-     ui->tableView->setModel(P.afficher());
- }
- else
-     msgBox.setText("Echec d'ajout");
-        msgBox.exec();
+    ui->stackedWidget->setCurrentIndex(1);
 }
 
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::on_pushButton_11_clicked()
 {
-    int nump = ui->lineEdit_3->text().toInt();
-    QString nom= ui->lineEdit_2->text();
-    int valeur = ui->lineEdit_4->text().toInt();
+    ui->CRUD->setCurrentIndex(0);
+}
 
-    Prime P(nom,nump,valeur);
-    bool test=P.modifier(nom,nump,valeur);
-    QMessageBox msgBox;
-        if(test)
-           {
-         ui->tableView->setModel(P.afficher());
-        QMessageBox::information(this, tr("Done"),
-                                 QString(tr("success"))
-                                 );
+void MainWindow::on_pushButton_12_clicked()
+{
+    ui->CRUD->setCurrentIndex(2);
+}
+
+void MainWindow::on_pushButton_13_clicked()
+{
+    ui->CRUD->setCurrentIndex(3);
+    ui->taboffre->setModel(o.afficher());
+
+}
+
+void MainWindow::on_pushButton_21_clicked()
+{
+    int idO=ui->lineEdit_nom->text().toInt();
+        QString nom=ui->lineEdit_prenom->text();
+        QString dateD=ui->lineEdit_5->text();
+        QString dateF=ui->lineEdit_6->text();
+        QString adresse=ui->lineEdit_adresse_2->text();
+        QString NomD=ui->lineEdit_adresse->text();
+        QString NomS=ui->lineEdit->text();
+       offre c (idO,dateD,dateF,adresse,NomD,nom,NomS);
+        int erreur=0;
+        if(ui->lineEdit_nom->text().isEmpty())
+        {
+            ui->lineEdit_nom->setStyleSheet("border: 2px solid red;");
+            erreur=1;
         }
-        else
-            QMessageBox::information(this, tr("Done"),
-                                                  QString(tr("echec"))
-                                                  );                msgBox.exec();
-}
+        else {ui->lineEdit_nom->setStyleSheet("");}
+        if(ui->lineEdit_prenom->text().isEmpty())
+        {
+            ui->lineEdit_prenom->setStyleSheet("border: 2px solid red;");
+            erreur=1;
+        }
+        else {ui->lineEdit_prenom->setStyleSheet("");}
+        if(ui->lineEdit_5->text().isEmpty())
+        {
+            ui->lineEdit_5->setStyleSheet("border: 2px solid red;");
+            erreur=1;
+        }
+        else {ui->lineEdit_5->setStyleSheet("");}
+        if(ui->lineEdit_6->text().isEmpty())
+        {
+            ui->lineEdit_6->setStyleSheet("border: 2px solid red;");
+            erreur=1;
+        }
+        else {ui->lineEdit_6->setStyleSheet("");}
+        if(ui->lineEdit_adresse_2->text().isEmpty())
+        {
+            ui->lineEdit_adresse_2->setStyleSheet("border: 2px solid red;");
+            erreur=1;
+        }
+        else {ui->lineEdit_adresse_2->setStyleSheet("");}
+        if(ui->lineEdit_adresse->text().isEmpty())
+        {
+            ui->lineEdit_adresse->setStyleSheet("border: 2px solid red;");
+            erreur=1;
+        }
+        else {ui->lineEdit_adresse->setStyleSheet("");}
+        if(ui->lineEdit->text().isEmpty())
+        {
+            ui->lineEdit->setStyleSheet("border: 2px solid red;");
+            erreur=1;
+        }
+        else {ui->lineEdit->setStyleSheet("");}
 
-
-
-void MainWindow::on_pushButton_5_clicked()
+if(erreur)
 {
-    int choix ;
-    choix=ui->comboBox_2->currentIndex();
-    QSqlQueryModel * model =new QSqlQueryModel();
+    QMessageBox::information(nullptr, QObject::tr("Ajouter un offre"),
+                QObject::tr("Vérifiez vos champs !.\n"
+                            "Click Cancel to exit."), QMessageBox::Cancel);
+}
+if(!erreur)
+{
+    bool test=c.ajouter();
+
+  if(test)
+{
+
+ ui->taboffre->setModel(o.afficher());//refresh
+ QMessageBox::information(nullptr, QObject::tr("Ajouter un offre"),
+                  QObject::tr("offre ajouté.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
+
+}
+}
+else
+      QMessageBox::critical(nullptr, QObject::tr("Ajouter un offre"),
+                  QObject::tr("Erreur !.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
 
 
-  if(ui->radioButton_2->isChecked())
-  model =   P.trierup(choix);
-
-
- else if(ui->radioButton->isChecked())
-    model=P.trier_down(choix);
-
-  else
-      model=P.afficher();
-
-   ui->tableView->setModel(model);
 }
 
-//Salaire
+
+
+
+void MainWindow::on_pushButton_14_clicked()
+{
+    ui->CRUD->setCurrentIndex(1);
+
+}
+
+void MainWindow::on_pushButton_26_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+
+}
+
+void MainWindow::on_pushButton_25_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+
+}
+
+void MainWindow::on_pushButton_20_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+
+}
+
+void MainWindow::on_pushButton_22_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+
+}
+
+void MainWindow::on_pushButton_19_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+
+}
+
 void MainWindow::on_pushButton_8_clicked()
 {
-    int nums=ui->lineEdit_6->text().toInt();
-    int montant=ui->lineEdit_7->text().toInt();
+    ui->stackedWidget->setCurrentIndex(0);
 
- Salaire S(nums, montant);
- bool test=S.ajouter();
- QMessageBox msgBox;
+}
 
- if(test)
-   {  msgBox.setText("Ajouté avec succes.");
-     ui->tableView_2->setModel(S.afficher());
- }
- else
-     msgBox.setText("Echec d'ajout");
-        msgBox.exec();
+void MainWindow::on_pushButton_30_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_pushButton_10_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::on_pushButton_9_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+    ui->CRUD_2->setCurrentIndex(1);
+
+}
+
+void MainWindow::on_pushButton_18_clicked()
+{
+    ui->CRUD_2->setCurrentIndex(1);
+    ui->CRUD_2->setCurrentIndex(2);
+    ui->tabdomaine->setModel(d.afficher());//refresh
+}
+
+void MainWindow::on_pushButton_16_clicked()
+{
+    ui->CRUD_2->setCurrentIndex(4);
+
+}
+
+void MainWindow::on_pushButton_17_clicked()
+{
+    ui->CRUD_2->setCurrentIndex(2);
+    ui->tabdomaine->setModel(d.afficher());//refresh
+    ui->CRUD_2->setCurrentIndex(3);
+
+
+}
+
+void MainWindow::on_pushButton_15_clicked()
+{
+    ui->CRUD_2->setCurrentIndex(0);
+
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+    ui->CRUD_2->setCurrentIndex(1);
+
+}
+void MainWindow::on_pushButton_4_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+    ui->CRUD_2->setCurrentIndex(1);
 }
 
 void MainWindow::on_pushButton_6_clicked()
 {
-    Salaire S1; S1.setnums(ui->lineEdit_9->text().toInt());
-    bool test=S1.supprimer(S1.getnums());
-    QMessageBox msgBox;
 
-    if(test)
-       { msgBox.setText("Supprimé avec succes.");
-    ui->tableView_2->setModel(S1.afficher());
+    int ido = ui->lineEdit_2->text().toInt();
+     bool test=o.supprimer(ido);
+     if(test)
+     {ui->tabdomaine->setModel(d.afficher());//refresh
+       QMessageBox::information(nullptr, QObject::tr("Supprimer offre"),
+                  QObject::tr("Offre supprimée.\n"
+                       "Click Cancel to exit."), QMessageBox::Cancel);
 
-    }
-    else
-        msgBox.setText("Echec de la suppression");
-         msgBox.exec();
+}
+}
+
+
+ void MainWindow::on_pushButton_5_clicked()
+ {
+        int idD=ui->lineEdit_8->text().toInt();
+           QString NomD=ui->lineEdit_7->text();
+           domaine d (idD,NomD);
+            bool test=d.ajouter();
+  if(test)
+{
+  ui->tabdomaine->setModel(o.afficher());//refresh
+QMessageBox::information(nullptr, QObject::tr("Ajouter un domaine"),
+                  QObject::tr("domaine ajoutée.\n"
+                              "Click Cancel to exit."), QMessageBox::Cancel);
+
+}
+ else
+    QMessageBox::critical(nullptr, QObject::tr("Ajouter un domaine"),
+              QObject::tr("Erreur !.\n"
+                          "Click Cancel to exit."), QMessageBox::Cancel);
+
+
 }
 
 void MainWindow::on_pushButton_7_clicked()
 {
-    int nums = ui->lineEdit_10->text().toInt();
-    int montant = ui->lineEdit_11->text().toInt();
+   int idD = ui->lineEdit_3->text().toInt();
+    bool test=d.supprimer(idD);
+    if(test)
+    {ui->tabdomaine->setModel(d.afficher());//refresh
+      QMessageBox::information(nullptr, QObject::tr("Supprimer un domaine"),
+                 QObject::tr("Carte supprimée.\n"
+                      "Click Cancel to exit."), QMessageBox::Cancel);
 
-    Salaire S(nums, montant);
-    bool test=S.modifier(nums, montant);
-    QMessageBox msgBox;
-        if(test)
-           {
-         ui->tableView_2->setModel(S.afficher());
-        QMessageBox::information(this, tr("Done"),
-                                 QString(tr("Salaire modifié !"))
-                                 );
+    }
+    else
+      QMessageBox::critical(nullptr, QObject::tr("Supprimer un domaine"),
+                QObject::tr("Erreur !.\n"
+                          "Click Cancel to exit."), QMessageBox::Cancel);
+
+}
+void MainWindow::on_pushButton_23_clicked()
+{
+    QSqlQuery query;
+
+  //  int idO = ui->lineEdit_nom5->text().toInt();
+        QString nom=ui->lineEdit_prenom5->text();
+        QString dateD=ui->lineEdit_11->text();
+        QString dateF=ui->lineEdit_12->text();
+        QString adresse=ui->lineEdit_date5->text();
+        QString NomD=ui->lineEdit_adresse5->text();
+        QString NomS=ui->lineEdit_5->text();
+
+
+            query.prepare("update offre set DATED=:dateD ,DATEF=:dateF , ADRESSE=:adresse ,NOM_DOMAINE=:NomD,NOM_OFFRE=:Nom, NOM_SOCIETE=:NomS WHERE ID_OFFRE =:idO");
+            query.bindValue(":nom",nom);
+            query.bindValue(":dateD",dateD);
+            query.bindValue(":dateF",dateF);
+            query.bindValue(":adresse",adresse);
+            query.bindValue(":NomD",NomD);
+            query.bindValue(":NomS",NomS);
+
+            bool t=query.exec();
+                   if(t)
+                   {
+                      ui->tabdomaine->setModel(d.afficher());//refresh
+                   QMessageBox::information(nullptr, QObject::tr("Modifier"),
+                                   QObject::tr("OFFRE modifié.\n"
+                                               "Click Cancel to exit."), QMessageBox::Cancel);
+
+                   }
+                   else
+                      { QMessageBox::critical(nullptr, QObject::tr("Modifier"),
+                                   QObject::tr("Erreur !.\n"
+                                               "Click Cancel to exit."), QMessageBox::Cancel);
+}
+}
+
+void MainWindow::on_pushButton_28_clicked()
+{
+    QSqlQuery query;
+    int idD=ui->lineEditnom_2->text().toInt();
+    QString NomD=ui->lineEdit_9->text();
+
+
+            query.prepare("update domaine set IDD=:idD ,NOMD=:NomD  WHERE IDD =:idD");
+            query.bindValue(":idD",idD);
+            query.bindValue(":NomD",NomD);
+
+
+            bool t=query.exec();
+                   if(t)
+                   {
+                      ui->tabdomaine->setModel(d.afficher());//refresh
+                   QMessageBox::information(nullptr, QObject::tr("Modifier"),
+                                   QObject::tr("domaine modifié.\n"
+                                               "Click Cancel to exit."), QMessageBox::Cancel);
+
+                   }
+                   else
+                      { QMessageBox::critical(nullptr, QObject::tr("Modifier"),
+                                   QObject::tr("Erreur !.\n"
+                                               "Click Cancel to exit."), QMessageBox::Cancel);
+}
+}
+
+
+
+void MainWindow::on_lineEdit_10_textChanged(const QString &arg1)
+{
+
+    ui->tabdomaine->setModel(d.rechercher(arg1));
+}
+
+void MainWindow::on_comboBox_currentTextChanged(const QString &arg1)
+{
+    if(arg1=="Id")
+        {
+            ui->tabdomaine->setModel(d.trierid());
         }
-        else
-            QMessageBox::information(this, tr("Done"),
-                                                  QString(tr("echec"))
-                                                  );                msgBox.exec();
+        else if (arg1=="Nom")
+        {
+            ui->tabdomaine->setModel(d.triernom());
+        }
+
 }

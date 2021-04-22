@@ -5,6 +5,7 @@
 #include <QCoreApplication>
 #include <QtSql/QSql>
 #include <QtSql/QSqlDatabase>
+#include <QSqlDatabase>
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlQuery>
 #include <QDebug>
