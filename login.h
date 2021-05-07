@@ -3,13 +3,14 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include "mainwindow.h"
-#include "user.h"
+
+#include <QDialog>
 
 namespace Ui {
 class login;
 }
 
-class login : public QMainWindow
+class login : public QDialog
 {
     Q_OBJECT
 
@@ -18,7 +19,6 @@ public:
     ~login();
 
 private slots:
-
     void on_pushButton_2_clicked();
 
 private:

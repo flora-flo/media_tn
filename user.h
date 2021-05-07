@@ -1,18 +1,18 @@
 #ifndef USER_H
 #define USER_H
-#include <QSqlQueryModel>
+#include <QString>
 
 class user
 {
-       QString NomUtilisateur;
-        QString MotDePasse;
+    QString NomUtilisateur;
+     QString MotDePasse;
 public :
 
-        user();
-        user(QString, long);
+     user();
+     user(QString, long);
 
-        QString getnom();
-        QString getpass();
+     QString getnom();
+     QString getpass();
 };
 
 #endif // USER_H

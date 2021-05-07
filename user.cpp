@@ -1,6 +1,5 @@
 #include "user.h"
 
-
 #include <QString>
 user::user()
 {

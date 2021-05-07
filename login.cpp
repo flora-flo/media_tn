@@ -1,11 +1,8 @@
 #include "login.h"
 #include "ui_login.h"
-#include <QMessageBox>
 #include "user.h"
-
-
 login::login(QWidget *parent) :
-    QMainWindow(parent),
+    QDialog(parent),
     ui(new Ui::login)
 {
     ui->setupUi(this);
@@ -15,9 +12,6 @@ login::~login()
 {
     delete ui;
 }
-
-
-
 
 void login::on_pushButton_2_clicked()
 {
@@ -35,12 +29,14 @@ void login::on_pushButton_2_clicked()
       {
                   mainwindow = new MainWindow(this);
                   mainwindow->show();
-                  this->hide();
+
+
 
       }
 
       else
       {
-         QMessageBox::critical (this, "Error", "Something went wrong !");
+         QMessageBox::critical (this, "Error", "Attention, Votre nom d'utilisateur ou mot de passe est incorrect !");
       }
+
 }

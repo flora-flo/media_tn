@@ -1,5 +1,4 @@
 #include "employe.h"
-
 using namespace std;
 
 employe::employe(int identifiant,QString nom,QString prenom,int telephone,QString mail,QString sexe)
@@ -16,9 +15,12 @@ bool employe::ajouterEmploye()
 {
 
     QSqlQuery query;
+    QString id=QString::number(identifiant);
+    QString tel=QString::number(telephone);
     QString res= QString::number(identifiant);
-    query.prepare("INSERT INTO CATEGORIE(IDENTIFIANT, NOM, PRENOM, TELEPHONE,MAIL,SEXE)"
-                 "VALUES (:IDENTIFIANT, :NOM, :PRENOM, :TELEPHONE, :MAIL,:SEXE)");
+
+    query.prepare("INSERT INTO EMPLOYE(IDENTIFIANT, NOM, PRENOM, TELEPHONE,MAIL,SEXE)"
+                 "VALUES (:id, :NOM, :PRENOM, :tel, :MAIL,:SEXE)");
     query.bindValue(":IDENTIFIANT", res);
     query.bindValue(":NOM",this->nom);
     query.bindValue(":PRENOM", this->prenom);
@@ -50,7 +52,7 @@ bool employe::supprimerEmploye()
     QSqlQuery query;
     QString id=QString::number(identifiant);
 
-    query.prepare("Delete from employe where IDENTIFIANT= :identifiant");
+    query.prepare("Delete from EMPLOYE where IDENTIFIANT= :identifiant");
     query.bindValue(":IDENTIFIANT", id);
 
     return query.exec();
@@ -73,11 +75,11 @@ bool employe::modifierEmploye()
     return query.exec();
 }
 
-bool employe::rechercherEmploye()//recherche modification
+/*bool employe::rechercherEmploye()//recherche modification
 {
     QSqlQuery query;
-    query.prepare("Select * from EMPLOYE where identifiant=:idEmploye");
-    query.bindValue(":idEmploye",identifiant);
+    query.prepare("Select * from EMPLOYE where identifiant=:identifiant");
+    query.bindValue(":identifiant",identifiant);
     query.exec();
 
     if (query.next())
@@ -90,7 +92,7 @@ bool employe::rechercherEmploye()//recherche modification
         sexe=(query.value(5).toString());
     }
     return query.exec();
-}
+}*/
 
 QSqlQueryModel * employe::trierEmployeParNom()
 {
@@ -126,7 +128,7 @@ QSqlQueryModel * employe::trierEmployeParCin()
 {
 
     QSqlQueryModel * model= new QSqlQueryModel();
-    model->setQuery("Select * from EMPLOYÉ order by identifiant ASC ");
+    model->setQuery("Select * from EMPLOYE order by identifiant ASC ");
 
     model->setHeaderData(0,Qt::Horizontal,QObject::tr("identifiant"));
     model->setHeaderData(1,Qt::Horizontal,QObject::tr("nom"));
@@ -144,7 +146,7 @@ bool employe::chercherParNom()
 {
 
     QSqlQuery query;
-    query.prepare("Select * from EMPLOYÉ where nom=:nom");
+    query.prepare("Select * from EMPLOYE where nom=:nom");
     query.bindValue(":nom",nom);
     query.exec();
 
@@ -164,7 +166,7 @@ bool employe::chercherParNom()
 bool employe::chercherParCin()
 {
     QSqlQuery query;
-    query.prepare("Select * from EMPLOYÉ where identifiant=:identifiant");
+    query.prepare("Select * from EMPLOYE where identifiant=:identifiant");
     query.bindValue(":identifiant",identifiant);
     query.exec();
 
