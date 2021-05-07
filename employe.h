@@ -18,7 +18,7 @@ using namespace std;
 class employe
 {
     QString nom, prenom,mail,sexe;
-    int identifiant,telephone,salaire;
+    int identifiant,telephone;
 
 public:
     //constructeurs
@@ -28,15 +28,30 @@ public:
     //getters
 
     int GetIdentifiant(){return identifiant;}
+    QString GetNom(){return nom;}
+    QString GetPrenom(){return prenom;}
+    int GetTelephone(){return telephone;}
+    QString GetMail(){return mail;}
+    QString GetSexe(){return sexe;}
+
+    //setters
     void SetIdentifiant(int idE){identifiant=idE;}
+    void SetNom(QString n){nom=n;}
+    void SetPrenom(QString pr){prenom=pr;}
+    void SetTelephone(int tel){telephone=tel;}
+    void SetMail(QString m){mail=m;}
+    void SetSexe(QString s){sexe=s;}
 
 
     //fonctions
     bool ajouterEmploye();
     bool supprimerEmploye();
-    bool rechercherEmploye();
+    bool maillingEmploye();
     bool modifierEmploye();
     int verification_employe();
+    int verifEmploye();
+    int verifEmployeParNom();
+    int verifEmployeParCin();
 
 
     QSqlQueryModel * afficherEmploye();

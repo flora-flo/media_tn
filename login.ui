@@ -1,128 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>login</class>
- <widget class="QMainWindow" name="login">
+ <widget class="QDialog" name="login">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>499</width>
-    <height>420</height>
+    <width>500</width>
+    <height>397</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Login</string>
   </property>
-  <property name="autoFillBackground">
-   <bool>false</bool>
-  </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>80</y>
+     <width>331</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Login</string>
+   </property>
+   <widget class="QLineEdit" name="utilisateur">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>500</y>
-      <width>75</width>
-      <height>23</height>
+      <x>20</x>
+      <y>90</y>
+      <width>171</width>
+      <height>20</height>
      </rect>
     </property>
-    <property name="text">
-     <string>se connecter</string>
+    <property name="accessibleName">
+     <string>utilisateur</string>
     </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>591</width>
-      <height>421</height>
-     </rect>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit {
+padding: 1px;
+border-style: solid;
+border: 2px solid gray;
+border-radius: 8px;
+}</string>
     </property>
     <property name="text">
      <string/>
     </property>
-    <property name="pixmap">
-     <pixmap>../../../Documents/2eS_2A/projet c++/projetqt/affiche22.jpg</pixmap>
+    <property name="placeholderText">
+     <string>username</string>
     </property>
    </widget>
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QLineEdit" name="motdepasse">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>70</y>
-      <width>331</width>
-      <height>271</height>
+      <x>20</x>
+      <y>140</y>
+      <width>171</width>
+      <height>20</height>
      </rect>
     </property>
-    <property name="title">
-     <string>Se Connecter</string>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit {
+padding: 1px;
+border-style: solid;
+border: 2px solid gray;
+border-radius: 8px;
+}</string>
     </property>
-    <widget class="QLineEdit" name="utilisateur">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>90</y>
-       <width>171</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="accessibleName">
-      <string>utilisateur</string>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLineEdit {
-padding: 1px;
-border-style: solid;
-border: 2px solid gray;
-border-radius: 8px;
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="placeholderText">
-      <string>username</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="motdepasse">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>140</y>
-       <width>171</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLineEdit {
-padding: 1px;
-border-style: solid;
-border: 2px solid gray;
-border-radius: 8px;
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="echoMode">
-      <enum>QLineEdit::Password</enum>
-     </property>
-     <property name="placeholderText">
-      <string>password</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton_2">
-     <property name="geometry">
-      <rect>
-       <x>190</x>
-       <y>220</y>
-       <width>102</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QPushButton {
+    <property name="text">
+     <string/>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
+    </property>
+    <property name="placeholderText">
+     <string>password</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>220</y>
+      <width>102</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
 color: white;
 background-color:  QLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0#ff2255, stop: 1 #ccf);
  
@@ -140,27 +107,30 @@ min-height: 13px;
 max-height: 13px;
 }
 rgb(255, 34, 85)</string>
-     </property>
-     <property name="text">
-      <string>connexion</string>
-     </property>
-    </widget>
+    </property>
+    <property name="text">
+     <string>connexion</string>
+    </property>
    </widget>
-   <zorder>label</zorder>
-   <zorder>pushButton</zorder>
-   <zorder>groupBox</zorder>
   </widget>
-  <widget class="QMenuBar" name="menubar">
+  <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>499</width>
-     <height>22</height>
+     <width>631</width>
+     <height>441</height>
     </rect>
    </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>../2eS_2A/projet c++/projetqt/affiche22.jpg</pixmap>
+   </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <zorder>label</zorder>
+  <zorder>groupBox</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -29,7 +29,7 @@ public:
 
 
             bool ajouter();
-            bool modifier();
+            bool modifier(int identifiant);
             QSqlQueryModel * afficher();
             bool supprimer(int);
             QSqlQueryModel * trier_nom();
@@ -48,3 +48,4 @@ public:
 };
 
 #endif // CATEGORIE_H
+
